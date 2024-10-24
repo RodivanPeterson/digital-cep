@@ -1,0 +1,23 @@
+{
+    "name": "rodivan_bitencourt/digital-cep",
+    "description": "Busca de cep online",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-0": {
+            "Search": "src/"
+        },
+        "psr-4": {
+            "RodivanBitencourt\\DigitalCep\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rodivan Peterson",
+            "email": "peterodi57@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0"
+    }
+}
