@@ -4,13 +4,27 @@ namespace RodivanBitencourt\DigitalCep;
 
 class Search
 {
-    private $url = "https://viacep.com.br/ws/";
+    private const API_URL = "https://viacep.com.br/ws/";
 
     public function getAddressFromZipCode(string $zipCode): array {
-        $zipCode = preg_replace('/[^0-9]/im', '', $zipCode);
+        $formattedZipCode = $this->formatZipCode($zipCode);
 
-        $get = file_get_contents($this->url . $zipCode . "/json");
+        $response = @file_get_contents(self::API_URL . $formattedZipCode . "/json");
+        
+        if ($response === false) {
+            throw new \Exception("Não foi possível acessar a API de CEP.");
+        }
 
-        return (array) json_decode($get);
+        $addressData = json_decode($response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \Exception("Erro ao decodificar resposta JSON.");
+        }
+
+        return $addressData ?: [];
+    }
+
+    private function formatZipCode(string $zipCode): string {
+        return preg_replace('/[^0-9]/', '', $zipCode);
     }
 }

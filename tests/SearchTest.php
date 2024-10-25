@@ -6,16 +6,16 @@ use RodivanBitencourt\DigitalCep\Search;
 class SearchTest extends TestCase
 {
     /**
-     * @dataProvider dadosTeste
+     * @dataProvider dadosEnderecoTeste
      */
     public function testGetAddressFromZipCodeDefaultUsage(string $input, array $esperado) {
-        $resultado = new Search;
-        $resultado = $resultado->getAddressFromZipCode($input);
+        $search = new Search();
+        $resultado = $search->getAddressFromZipCode($input);
 
         $this->assertEquals($esperado, $resultado);
     }
 
-    public function dadosTeste() {
+    public function dadosEnderecoTeste() {
         return [
             "Endereço Praça da Sé" => [
                 "01001000",
@@ -53,6 +53,29 @@ class SearchTest extends TestCase
                     "siafi" => "7107"
                 ]
             ]
+        ];
+    }
+
+    /**
+     * @dataProvider dadosFormatacaoCep
+     */
+    public function testFormatZipCode(string $input, string $esperado) {
+        $search = new Search();
+
+        $reflection = new \ReflectionClass($search);
+        $method = $reflection->getMethod('formatZipCode');
+        $method->setAccessible(true);
+        
+        $resultado = $method->invoke($search, $input);
+
+        $this->assertEquals($esperado, $resultado);
+    }
+
+    public function dadosFormatacaoCep() {
+        return [
+            "CEP com hífen" => ["12345-678", "12345678"],
+            "CEP com espaços" => [" 123 45 678 ", "12345678"],
+            "CEP com caracteres" => ["12a34b567c8", "12345678"],
         ];
     }
 }
